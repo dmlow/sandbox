@@ -11,29 +11,33 @@ var kToolColors = ["yellow","blue","green","red","navy"];
 var kAngleOffset = -2 * Math.PI / 10;
 var kArcTheta = 2 * Math.PI / 5;
 var kToolBounds = {
-    contact:  [0.0, 1.000], // based on batting average for now ( H / AB )
-    power:    [0.0, 4.000], // based on slugging ( TB / AB )
-    fielding: [0.0, 1.000], // based on fielding percentage
+    contact:  [0.150, 0.500], // based on batting average for now ( H / AB )
+    power:    [0.150, 0.500], // based on slugging ( TB / AB )
+    fielding: [0.900, 1.000], // based on fielding percentage
     throwing: [0.0, 10.00], // based on ERA ( ER / IP * 9 ) (this should actually go backwards...)
     speed:    [0.0, 1.000]  // steal rate ( SB / (SB + CS) )
 };
 
 
-function NormalizedToolObject(tool, toolValues, radius) {
+function NormalizedToolObject(tool, value, radius) {
+    var toolScale = d3.scale.linear()
+        .domain(kToolBounds[tool])
+        .range([0,radius]);
+
     return {
         color: kToolColors[kToolIndex[tool]],
         theta: kToolIndex[tool] * kArcTheta + kAngleOffset,
-        value: radius * toolValues[tool] / kToolBounds[tool][1]
+        value: toolScale(value)
     };
 }
 
 function FormattedToolData(toolValues, radius) {
     return [
-        NormalizedToolObject("contact", toolValues, radius),
-        NormalizedToolObject("power", toolValues, radius),
-        NormalizedToolObject("fielding", toolValues, radius),
-        NormalizedToolObject("throwing", toolValues, radius),
-        NormalizedToolObject("speed", toolValues, radius)
+        NormalizedToolObject("contact", toolValues["contact"], radius),
+        NormalizedToolObject("power", toolValues["power"], radius),
+        NormalizedToolObject("fielding", toolValues["fielding"], radius),
+        NormalizedToolObject("throwing", toolValues["throwing"], radius),
+        NormalizedToolObject("speed", toolValues["speed"], radius)
     ];
 }
 
@@ -43,14 +47,6 @@ function DrawToolsChart(where, geometry, tools) {
     var center = {
         x: geometry.width / 2,
         y: geometry.height / 2};
-
-    var arc = d3.svg.arc()
-        .innerRadius(0)
-        .outerRadius(radius);
-
-    var pie = d3.layout.pie()
-        .sort(null)
-        .value(function(d) {return d;});
 
     var svg = d3.select('#' + where)
         .append("svg")
@@ -69,7 +65,9 @@ function DrawToolsChart(where, geometry, tools) {
             .startAngle(function(d) {return d.theta;})
             .endAngle(function(d) {return d.theta + kArcTheta;}))
         .attr("fill", function(d) {return d.color;})
-        .attr("stroke","white");
+        .attr("stroke","white")
+        .attr("stroke-width", "0.5px")
+        .attr("transition", "transform", "ro");
 }
 
 DrawToolsChart("toolschart",
@@ -78,10 +76,10 @@ DrawToolsChart("toolschart",
                     height: 360
                 },
                 {
-                    contact:  0.300,
-                    power:    0.500,
+                    contact:  0.250,
+                    power:    0.410,
                     fielding: 0.970,
-                    throwing: 2.30,
-                    speed:    0.80
+                    throwing: 4.30,
+                    speed:    0.70
                 });
 
