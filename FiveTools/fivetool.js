@@ -38,9 +38,9 @@ function DrawToolsChart(where, geometry, tools) {
     svg.selectAll(".arc")
         .data(toolData)
         .enter().append("path")
-        .attr("class", "arc")
+        .attr("class", "tool-arc")
 
-    var g = svg.selectAll(".arc")
+    var g = svg.selectAll(".tool-arc")
         .attr("d", d3.svg.arc()
             .innerRadius(0)
             .outerRadius(function(d) {return Math.max(0,d.value);})

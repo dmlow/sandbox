@@ -36,6 +36,8 @@ d3.csv("FanGraphs_2012.csv", function(error, data) {
         d.fielding = +d["UZR/150"];
 //        d.throwing = +d["ERA"];
         d.throwing = +d["PitchingWAR"];
+//        d.throwing = d3.max(data, function(d) {return +d["xFIP"];}) - +d["xFIP"];
+//        d.throwing = d3.max(data, function(d) {return +d["ERA"];}) - +d["ERA"];
 //        d.speed = +d["SB"] / (+d["SB"] / +d["CS"]);
         d.speed = +d["Spd"];
     });
