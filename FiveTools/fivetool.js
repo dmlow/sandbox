@@ -1,59 +1,75 @@
 // these are the mins/maxes for each tool
-var kToolsColors = ["blue", "red", "green", "yellow", "orange"];
-
-kToolBounds = {
+var kTools = ["contact", "power", "fielding", "throwing", "speed"];
+var kToolIndex = {
+    contact: 0,
+    power: 1,
+    fielding: 2,
+    throwing: 3,
+    speed: 4
+};
+var kToolColors = ["yellow","blue","green","red","navy"];
+var kAngleOffset = -2 * Math.PI / 10;
+var kArcTheta = 2 * Math.PI / 5;
+var kToolBounds = {
     contact:  [0.0, 1.000], // based on batting average for now ( H / AB )
     power:    [0.0, 4.000], // based on slugging ( TB / AB )
     fielding: [0.0, 1.000], // based on fielding percentage
     throwing: [0.0, 10.00], // based on ERA ( ER / IP * 9 ) (this should actually go backwards...)
-    running:  [0.0, 1.000]  // steal rate ( SB / (SB + CS) )
+    speed:    [0.0, 1.000]  // steal rate ( SB / (SB + CS) )
+};
+
+
+function NormalizedToolObject(tool, toolValues, radius) {
+    return {
+        color: kToolColors[kToolIndex[tool]],
+        theta: kToolIndex[tool] * kArcTheta + kAngleOffset,
+        value: radius * toolValues[tool] / kToolBounds[tool][1]
+    };
 }
 
-function NormalizedToolValues(tools, radius) {
-    // normalizes the five tools according to the bounds defined in kToolBounds and the specified radius.
-    var normalizedTools = [
-        radius * tools.contact  / kToolBounds["contact"][1],
-        radius * tools.power    / kToolBounds["power"][1],
-        radius * tools.fielding / kToolBounds["fielding"][1],
-        radius * tools.throwing / kToolBounds["throwing"][1],
-        radius * tools.running  / kToolBounds["running"][1]
+function FormattedToolData(toolValues, radius) {
+    return [
+        NormalizedToolObject("contact", toolValues, radius),
+        NormalizedToolObject("power", toolValues, radius),
+        NormalizedToolObject("fielding", toolValues, radius),
+        NormalizedToolObject("throwing", toolValues, radius),
+        NormalizedToolObject("speed", toolValues, radius)
     ];
-
-    return normalizedTools;
 }
 
 function DrawToolsChart(where, geometry, tools) {
-    var toolValues = NormalizedToolValues(tools);
     var radius = Math.min(geometry.width, geometry.height) / 2.0;
+    var toolData = FormattedToolData(tools, radius);
     var center = {
         x: geometry.width / 2,
         y: geometry.height / 2};
+
+    var arc = d3.svg.arc()
+        .innerRadius(0)
+        .outerRadius(radius);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) {return d;});
 
     var svg = d3.select('#' + where)
         .append("svg")
         .attr("width", geometry.width)
         .attr("height", geometry.height)
         .append("g")
-        .attr("transform", "rotate(" + -360/5/2 + "," + center.x + "," + center.y + ") " +
-            "translate(" + center.x + "," + center.y + ")");
+        .attr("transform", "rotate(" + -360/5/2 + "," + center.x + "," + center.y + ")")
+        .attr("transform", "translate(" + center.x + "," + center.y + ")");
 
-    var arc = d3.svg.arc()
-        .innerRadius(10)
-        .outerRadius(radius);
-
-    var pie = d3.layout.pie()
-        .sort(null)
-        .value(function(d) {return d});
-
-    var g = svg.selectAll(".arc")
-        .data(pie([1,1,1,1,1]))
-        .enter().append("g")
-        .attr("class", "arc");
-
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", "#ff0000");
-
+    svg.selectAll(".arc")
+        .data(toolData)
+        .enter().append("path")
+        .attr("d", d3.svg.arc()
+            .innerRadius(0)
+            .outerRadius(function(d) {return d.value;})
+            .startAngle(function(d) {return d.theta;})
+            .endAngle(function(d) {return d.theta + kArcTheta;}))
+        .attr("fill", function(d) {return d.color;})
+        .attr("stroke","white");
 }
 
 DrawToolsChart("toolschart",
@@ -66,6 +82,6 @@ DrawToolsChart("toolschart",
                     power:    0.500,
                     fielding: 0.970,
                     throwing: 2.30,
-                    running:  0.80
+                    speed:    0.80
                 });
 
