@@ -8,21 +8,36 @@
 </head>
 <body>
     <div id="description" class="descriptive-text">
-        <p>For a weekend project, I decided to get some practice using the d3.js library by generating Nightingale charts for each of the 30 MLB teams according to their performance in each of the traditional "five tools" of baseball: hitting, hitting for power, fielding, throwing, and speed. The charts show, moving clockwise starting from the top, each team's strength in hitting (yellow); power (blue); fielding (green); throwing (red); and speed (navy).</p>
-        <p>While ultimately, I'd like be able to update the charts live as the season progresses, in this iteration, I'm using static data that I pulled from FanGraphs for the 2012 season.</p>
-        <p>I experimented with using a few different stats for each tool, before settling on the following:
+        <h1>Five Tools</h1>
+        <p>
+            For a weekend project, I decided to get some practice using the d3.js library by generating Nightingale
+            charts for each of the 30 MLB teams according to their performance in each of the traditional "five
+            tools" of baseball: hitting, hitting for power, fielding, throwing, and speed. The charts show, moving
+            clockwise starting from the top, each team's strength in hitting (yellow); power (blue); fielding
+            (green); throwing (red); and speed (navy).
+        </p>
+        <p>
+            While ultimately, I'd like be able to update the charts live as the season progresses, in this iteration,
+            I'm using static data that I pulled from FanGraphs for the 2012 season.
+        </p>
+        <p>
+            I experimented with using a few different stats for each tool, before settling on the following:
             <ol>
                 <li>Contact rate for hitting,</li>
                 <li>Isolated power for power,</li>
                 <li>UZR/150 for fielding,</li>
                 <li>Pitching WAR for throwing,</li>
-                <li>FanGraph's Spd rating for speed.</li>
+                <li>FanGraph's Ultimate Base Running (UBR) for speed.</li>
             </ol>
         </p>
-        <p>The one consistent trend here is that better "throwing" (in this case, pitching) teams tended to make the playoffs or at least finish higher in the rankings, while strenght in the four other tools didn't show as much consistency in results. As a Bay Area fan, two charts that stand out to me are the ones for the A's and the Giants since each team was relatively strong in four out of five tools, but then near dead last int he fifth--hitting for contact and hitting for power, respectively.</p>
+        <p>
+            The one consistent trend here is that better "throwing" (in this case, pitching) teams tended to make the
+            playoffs or at least finish higher in the rankings, while strenght in the four other tools didn't show
+            as much consistency in results.
+        </p>
     </div>
 
-    <div id="tool-charts"></div>
+    <div id="tool-charts-div"></div>
 
     <script src="lib/d3.min.js" type="text/javascript"></script>
     <script src="lib/jquery.min.js" type="text/javascript"></script>

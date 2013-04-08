@@ -12,6 +12,11 @@ body {
 .tool-chart {
 }
 
+.tool-charts {
+    margin: 5px;
+    padding: 5px;
+}
+
 .team-cell {
     background: beige;
     text-align: center;
@@ -29,7 +34,7 @@ div {
     border: 1px solid black;
     float: left;
     clear: left right;
-    width: 250px;
+    width: 400px;
     height: 700px;
     font: 14px sans-serif;
     text-align: left;
