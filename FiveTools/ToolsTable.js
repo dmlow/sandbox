@@ -16,7 +16,7 @@ $(document).ready(function() {
             .append("<br>");
         teamsTable.append(tRow.append(tCell));
     });
-    $("#tool-charts").append(teamsTable);
+    $("#tool-charts-div").append(teamsTable);
 
     // draw the tools chart for each team (using static manually procured fangraphs data for now)
     d3.csv("data/FanGraphs_2012.csv", function(error, data) {
@@ -34,7 +34,8 @@ $(document).ready(function() {
 //            d.throwing = d3.max(data, function(d) {return +d["xFIP"];}) - +d["xFIP"];
 //            d.throwing = d3.max(data, function(d) {return +d["ERA"];}) - +d["ERA"];
 //            d.speed = +d["SB"] / (+d["SB"] / +d["CS"]);
-            d.speed = +d["Spd"];
+//            d.speed = +d["Spd"];
+            d.speed = +d["UBR"];
         });
 
         // modify the tool bounds (yeah yeah yeah, K was supposed to be constants...)
