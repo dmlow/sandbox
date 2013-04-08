@@ -1,10 +1,13 @@
+// this is where I put all the logic for generating the five tool nightingale charts
+
 function NormalizedToolObject(tool, value, radius) {
     var toolScale = d3.scale.linear()
         .domain(K.ToolBounds[tool])
-        .range([K.MinRadius*radius,radius]);
+        .range([K.MinRadius*radius,0.9*radius]);
 
     return {
-        value: toolScale(value),
+        normedValue: toolScale(value),
+        value: value,
         color: K.ToolColors[K.ToolIndex[tool]],
         theta: K.ToolIndex[tool] * K.ArcTheta + K.AngleOffset
     };
@@ -31,6 +34,7 @@ function DrawToolsChart(where, geometry, tools) {
         .append("svg")
         .attr("width", geometry.width)
         .attr("height", geometry.height)
+        .attr("class", "tool-chart")
         .append("g")
         .attr("transform", "rotate(" + -360/5/2 + "," + center.x + "," + center.y + ")")
         .attr("transform", "translate(" + center.x + "," + center.y + ")");
@@ -38,29 +42,23 @@ function DrawToolsChart(where, geometry, tools) {
     svg.selectAll(".arc")
         .data(toolData)
         .enter().append("path")
-        .attr("class", "tool-arc")
+        .attr("class", "tool-arc");
 
     var g = svg.selectAll(".tool-arc")
+        // draw the pie slices
         .attr("d", d3.svg.arc()
             .innerRadius(0)
-            .outerRadius(function(d) {return Math.max(0,d.value);})
+            .outerRadius(function(d) {return Math.max(0,d.normedValue);})
             .startAngle(function(d) {return d.theta;})
             .endAngle(function(d) {return d.theta + K.ArcTheta;}))
-        .attr("fill", function(d) {return d.color;})
-        .attr("stroke","black")
-        .attr("stroke-width", "0.5px")
-        .attr("transition", "transform", "ro")
-        .on("mouseover", function(d) {
-            div.transition()
-                .duration(200)
-                .style("opacity", .9);
-            div .html("hellow world!")
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(d) {
-            div.transition()
-                .duration(500)
-                .style("opacity", 0);
+        .attr("fill", function(d) {return d.color;});
+
+        // add the text
+    d3.select(".tool-arc")
+        .data(toolData)
+        .append("text")
+        .attr("class", "tool-tip")
+        .text(function(d) {
+            return d.value;
         });
 }

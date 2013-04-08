@@ -1,10 +1,4 @@
-/**
- * Created with JetBrains WebStorm.
- * User: fireplacetv
- * Date: 4/7/13
- * Time: 1:00 PM
- * To change this template use File | Settings | File Templates.
- */
+// putting a bunch of global variables in here...
 
 // constants
 var K = {
@@ -37,7 +31,7 @@ var K = {
     ArcTheta: 2 * Math.PI / 5,
     MinRadius: 0.0,
     Geometry: {
-        width: 150,
-        height: 150
+        width: 100,
+        height: 100
     }
 };
