@@ -1,12 +1,22 @@
 // this is where I put all the logic for generating the five tool nightingale charts
 
 function NormalizedToolObject(tool, value, radius) {
+    var toolBoundMin = Math.min(K.ToolBounds[tool][0],K.ToolBounds[tool][1]);
+//    var lowerToolBound = K.ToolBounds[tool][0] - toolBoundMin;
+//    var upperToolBound = Math.sqrt(Math.abs(K.ToolBounds[tool][1] - toolBoundMin));
+//    var toolScale = d3.scale.linear()
+//        .domain(lowerToolBound, upperToolBound)
+//        .range([K.MinRadius*radius,0.95*radius]);
     var toolScale = d3.scale.linear()
         .domain(K.ToolBounds[tool])
-        .range([K.MinRadius*radius,0.9*radius]);
+        .range([K.MinRadius * radius, radius]);
+    var sqrtScale = d3.scale.linear()
+        .domain([Math.sqrt(K.MinRadius * radius) / Math.PI, Math.sqrt(radius) / Math.PI])
+        .range([K.MinRadius * radius, radius])
 
     return {
-        normedValue: toolScale(value),
+//        normedValue: toolScale(value),
+        normedValue: sqrtScale(Math.sqrt(toolScale(value)) / Math.PI),
         value: value,
         color: K.ToolColors[K.ToolIndex[tool]],
         theta: K.ToolIndex[tool] * K.ArcTheta + K.AngleOffset
@@ -48,17 +58,9 @@ function DrawToolsChart(where, geometry, tools) {
         // draw the pie slices
         .attr("d", d3.svg.arc()
             .innerRadius(0)
-            .outerRadius(function(d) {return Math.max(0,d.normedValue);})
+            .outerRadius(function(d) {return d.normedValue;})
             .startAngle(function(d) {return d.theta;})
             .endAngle(function(d) {return d.theta + K.ArcTheta;}))
         .attr("fill", function(d) {return d.color;});
 
-        // add the text
-    d3.select(".tool-arc")
-        .data(toolData)
-        .append("text")
-        .attr("class", "tool-tip")
-        .text(function(d) {
-            return d.value;
-        });
 }

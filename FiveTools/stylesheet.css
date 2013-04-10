@@ -22,18 +22,18 @@ body {
     text-align: center;
     font: 14px sans-serif;
     font-weight: bold;
+    padding: 1px;
 }
 
 div {
-    flot: left;
-    clear: left right;
+    float: left;
 }
 
 .descriptive-text {
     background: beige;
     border: 1px solid black;
     float: left;
-    clear: left right;
+    clear: left;
     width: 400px;
     height: 700px;
     font: 14px sans-serif;
