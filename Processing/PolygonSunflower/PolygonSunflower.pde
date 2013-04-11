@@ -1,9 +1,12 @@
 float _WIDTH = 800;
 float _HEIGHT = 800;
-float _RADIUS = 5;
+float _RADIUS = 10;
 float _SCALE = 20;
 float _GOLDEN_ANGLE = 2.39996; // in radians
-int _MAX = 1000;
+int _MAX = 500;
+
+float centerX = _WIDTH / 2;
+float centerY = _HEIGHT / 2;
 
 void setup() {
   size((int) _WIDTH, (int) _HEIGHT);
@@ -11,6 +14,10 @@ void setup() {
   // noStroke();
   // noLoop();
   strokeWeight(1);
+  colorMode(HSB);
+  noCursor();
+  smooth();
+  // frameRate(10);
 }
 
 
@@ -18,43 +25,50 @@ int offset = 0;
 color fillColor = color(random(256),random(256),random(256));
 
 void draw() {
+  fill(0,32);
+  rect(0,0,_HEIGHT,_WIDTH);
   
   float theta;
-  offset++;
-  if ((offset % 7) == 0) {
-    fillColor = color(random(128)+128,random(64)+32,random(32)+32);
+  offset += 3;
+  if ((offset % 8) == 0) {
+    fillColor = color(offset % 255,192,192);
   }
-  else if ((offset % 53) == 0) {
-    fillColor = color(0,0,0);
-  }
+//  else if ((offset % 7) == 0) {
+//    fillColor = color(0,0,0);
+//  }
 
   for (int n = 0; n < _MAX; n++) { 
     // get theta
     theta = n * _GOLDEN_ANGLE + radians(offset);
     
     // get cartesian coords
-    float x = GetX(n, theta, _SCALE * cos(radians(offset)) + _SCALE);
+    float x = GetX(n, theta, _SCALE * sin(radians(offset)) + _SCALE);
     float y = GetY(n, theta, _SCALE * sin(radians(offset)) + _SCALE);
     
     // draw the ellipse
     stroke(fillColor);
     fill(fillColor);
-//    ellipse(x,y, _RADIUS, _RADIUS);
-//    DrawPolygon(x,y,_RADIUS,(int) random(6) + 3,0);
-    DrawStar(x, y, _RADIUS, 0.5, (n % 4) + 3, 0); 
+    ellipse(x,y, _RADIUS, _RADIUS);
+    DrawPolygon(x,y,_RADIUS,(int) random(6) + 3,0);
+//    DrawStar(x, y, _RADIUS, 0.5, (n % 4) + 3, -0); 
   }
   
+}
+
+void mouseMoved() {
+  centerX = mouseX;
+  centerY = mouseY;
 }
 
 // converts polar coordinates to cartesian coordinates 
 // appropriate for the _WIDTH, _HEIGHT specified above
 float GetX(int n, float theta, float scale) {
-  return _WIDTH / 2 + scale * sqrt(n) * cos(theta);
+  return centerX + scale * sqrt(n) * cos(theta);
 }
 
 // same as above, but for Y coordinate.
 float GetY(int n, float theta, float scale) {
-  return _HEIGHT / 2 + scale * sqrt(n) * sin(theta);
+  return centerY + scale * sqrt(n) * sin(theta);
 }
 
 // draws an n-pointed polygon inside a circle of radius r,
