@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+<body>
+    <div id="folder-drop" type="file" WebKitDirectoryDrop></div>
+
+    <script src="lib/jquery.min.js" type="text/javascript"></script>
+    <script>
+        $("#folder-drop").bind("dragover", function(evt) {
+            $("#folder-drop").addClass("hover");
+        });
+        $("#folder-drop").bind("dragleave", function(evt) {
+            $("#folder-drop").removeClass("");
+        });
+
+        $("#folder-drop").bind("drop", function(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var dataTransfer = evt.dataTransfer;
+            if(dataTransfer && dataTransfer.items){
+                var items = dataTransfer.items,
+                        len   = items.length,
+                        i, entry;
+                for(i=0; i<len; i++){
+                    entry = items[i]
+                    if(entry.getAsEntry){  //Standard HTML5 API
+                        entry = entry.getAsEntry();
+                    }else if(entry.webkitGetAsEntry){  //WebKit implementation of HTML5 API.
+                        entry = entry.webkitGetAsEntry();
+                    }
+                    if(entry.isFile){
+                        //Handle FileEntry
+                        console.log("file: " + entry.name);
+                    }else if(entry.isDirectory){
+                        //Handle DirectoryEntry
+                        console.log("directory: " + entry.name);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

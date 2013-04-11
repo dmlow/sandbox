@@ -1,0 +1,14 @@
+body {
+    font: 12pt sans-serif;
+    background: orange;
+}
+
+#folder-drop {
+    width: 400px;
+    height: 400px;
+    border: 10px dashed gray;
+}
+
+#folder-drop.hover {
+    border: 10px dashed white;
+}
