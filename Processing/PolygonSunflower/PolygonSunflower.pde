@@ -1,37 +1,45 @@
 float _WIDTH = 800;
 float _HEIGHT = 800;
-float _RADIUS = 10;
-float _SCALE = 20;
 float _GOLDEN_ANGLE = 2.39996; // in radians
 int _MAX = 500;
+color _BACKGROUND = color(196,16,80);
 
 float centerX = _WIDTH / 2;
 float centerY = _HEIGHT / 2;
+float maxRadius = sqrt(_WIDTH * _WIDTH / 4+ _HEIGHT * _HEIGHT /4);
+float _scale = 10;
+float _scaleFactor = 1;
+float _radius = 10;
+
+boolean rotate = true;
+int _mode = 0;
 
 void setup() {
   size((int) _WIDTH, (int) _HEIGHT);
-  background(random(256));
+  background(_BACKGROUND);
   // noStroke();
   // noLoop();
   strokeWeight(1);
   colorMode(HSB);
   noCursor();
   smooth();
-  // frameRate(10);
+  frameRate(30);
 }
 
 
 int offset = 0;
-color fillColor = color(random(256),random(256),random(256));
+color fillColor = color(240,240,64);
 
 void draw() {
-  fill(0,32);
+  fill(_BACKGROUND, 64);
   rect(0,0,_HEIGHT,_WIDTH);
   
   float theta;
-  offset += 3;
-  if ((offset % 8) == 0) {
-    fillColor = color(offset % 255,192,192);
+  if (rotate) {
+    offset += 3;
+  }
+  if ((offset % 11) == 0) {
+    // fillColor = color(offset % 256, 192,192);
   }
 //  else if ((offset % 7) == 0) {
 //    fillColor = color(0,0,0);
@@ -41,16 +49,24 @@ void draw() {
     // get theta
     theta = n * _GOLDEN_ANGLE + radians(offset);
     
-    // get cartesian coords
-    float x = GetX(n, theta, _SCALE * sin(radians(offset)) + _SCALE);
-    float y = GetY(n, theta, _SCALE * sin(radians(offset)) + _SCALE);
+    // get cartesian coords for each point in the sunflower
+    float x = GetX(n, theta, _scaleFactor * scale());
+    float y = GetY(n, theta, _scaleFactor * scale());
     
-    // draw the ellipse
+    // draw the shapes
     stroke(fillColor);
-    fill(fillColor);
-    ellipse(x,y, _RADIUS, _RADIUS);
-    DrawPolygon(x,y,_RADIUS,(int) random(6) + 3,0);
-//    DrawStar(x, y, _RADIUS, 0.5, (n % 4) + 3, -0); 
+    fill(0,0);
+    switch (_mode % 3) {
+      case 0:
+        ellipse(x, y, _radius * 2, _radius * 2);
+        break;
+      case 1:
+        DrawPolygon(x, y, _radius, (n % 6) + 3, theta);
+        break;
+      case 2:
+        DrawStar(x, y, _radius, 0.5, (n % 4) + 3, theta);
+        break;
+    } 
   }
   
 }
@@ -58,6 +74,45 @@ void draw() {
 void mouseMoved() {
   centerX = mouseX;
   centerY = mouseY;
+}
+
+void keyPressed() {
+  if (key == ' ')
+  {
+    if (rotate) {
+      rotate = false;
+    }
+    else {
+      rotate = true;
+    }
+  }
+  if (key == '+' || key == '=') {
+    _mode = (_mode + 1) % 3;
+  }
+  if (key == '-') {
+    _mode = (_mode - 1) % 3;
+  }
+  
+  if (key == '<') {
+    _radius *= 0.99;
+  }
+  if (key == '>') {
+    _radius *= 1.01;
+  }
+
+  if (key == ',') {
+    _scaleFactor *= 0.99;
+  }
+  if (key == '.') {
+    _scaleFactor *= 1.01;
+  }
+}
+
+float scale() {
+  float distance = sqrt( (centerX - _WIDTH/2) * (centerX - _WIDTH/2)
+                      +(centerY - _HEIGHT/2) * (centerY - _HEIGHT/2));
+  distance = distance / maxRadius * PI/2;
+  return (cos(distance) * _scale);
 }
 
 // converts polar coordinates to cartesian coordinates 
@@ -72,7 +127,7 @@ float GetY(int n, float theta, float scale) {
 }
 
 // draws an n-pointed polygon inside a circle of radius r,
-// centered at x,y, rotated by theta
+// centered at x,y, rotated by a
 void DrawPolygon(float x, float y, float r, int n, float a) {
   float theta = 2 * PI / n;
   float offset;
