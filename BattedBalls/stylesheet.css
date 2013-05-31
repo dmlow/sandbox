@@ -1,0 +1,21 @@
+body {
+    font: 12px sans-serif;
+    background: grey;
+}
+
+div {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid darkslategray;
+    background: cornsilk;
+}
+
+.deselected {
+    color: lightgray;
+    background: dimgray;
+}
+
+.team:hover {
+    color: white;
+    background: black;
+}
