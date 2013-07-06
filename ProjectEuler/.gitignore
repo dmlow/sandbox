@@ -1,0 +1,5 @@
+# latex output
+*.pdf
+*.aux
+*.log
+*.gz

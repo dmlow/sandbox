@@ -1,0 +1,33 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\title{Project Euler Problem 4: \\Largest Palindrome Product}
+\author{Derrick Low}
+\date{\today}
+\maketitle
+
+\section{Problem Statement}
+A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is $9009 = 91 \times 99$.
+
+Find the largest palindrome made from the product of two 3-digit numbers.
+
+\section{notes}
+First, observe that the product of two 3-digit numbers is less than $10^3 \times 10^3 = 10^6$, so it has at most 6 digits. Thus, the largest such product, $p$, has the form $abccba$, that is, 
+\begin{eqnarray*}
+p 
+&=& 100001a + 10010b + 1100c \\
+&=& 11(9091a + 910b + 100c) \\
+&=& 11(9091 \cdot a + 2\cdot 5 \cdot 7 \cdot 13 \cdot b + 2 \cdot 2 \cdot 5 \cdot 5 \cdot c) \\
+&=& mn
+\end{eqnarray*}
+where $m$ and $n$ are our three digit numbers.
+
+At least one of $m$ and $n$ is divisible by $11$. By symmetry, assume $11$ divides $m$, so $m = 11 \cdot m'$, where $m'$ is a two digit number. That leaves us with a $899 \times 89$ matrix to examine ($80011$ potential matches).
+
+
+
+\end{document}
